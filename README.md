@@ -15,7 +15,7 @@ This course has the following chapters and su-sections
     * Discrete Logarithm Problem
     * Chaum-Pedersen ZKP Protocol
     * Quiz: Chaum-Pedersen ZKP Protocol
-    * Toy Examoke
+    * Toy Example
     * Assignment: Importance of Good Random Number Generators
 2. ZKP Protocol in Rust
     * Install Rust
