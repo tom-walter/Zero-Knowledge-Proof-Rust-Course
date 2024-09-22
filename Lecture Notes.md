@@ -332,6 +332,7 @@ Overview
 ### 3. Coding Exponentiate, Solve & Verify
 * to handle big integers beyond the standard library support, we can use `num-bigint`
     ```toml
+    [dependencies]
     num-bigint = { version = "0.4", features = ["rand"]}
     ```
     * this also comes with a RNG feature, which is useful for us
@@ -343,6 +344,27 @@ Overview
     * this means the integer is too high or too low to be captured in memory for this given data type
 
 ### 4. Unit Test: Toy Example
+Exercise
+* using the example chapter 1 section 10, build a unit test that for three functions
+* run the tests with
+    ```
+    cargo test --lib
+    ```
+
 ### 5. Random Number Generator (RNG)
+Overview
+* for the protocol to be secure, we need very large integers that are randomly chosen
+* there are special crates with cryptographically secure generation, but for learning purposes, we'll be using the `rand` crate
+    ```toml
+    [dependencies]
+    rand = "0.8"
+    ```
+    * this integrates with `num_bigint` crate from before 
+* this implementation is easy, but we also need to extend the unit tests
+    * this time generate the random numbers $k, c$ with the new function
+    * the example results will no longer work, but the verification must remain valid
+
 ### 6. Refactoring: Add a ZKP struct
+* 
+
 ### 8. 1024-bit Unit Test
