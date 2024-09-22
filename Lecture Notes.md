@@ -365,6 +365,11 @@ Overview
     * the example results will no longer work, but the verification must remain valid
 
 ### 6. Refactoring: Add a ZKP struct
-* 
+Refactoring
+* now we have the mathematical groundwork laid out in code
+* for better readability and usability, let's refactor the code
+    * add a struct `ZKP` that holds the public parameters of the protocol
+    * move the function into methods of the `ZKP` struct 
+* remember that refactoring the code also requires refactoring the tests 
 
 ### 8. 1024-bit Unit Test
