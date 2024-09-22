@@ -301,3 +301,48 @@ Alice
 * Bob can be verified
 
 ### 11. Assignment: Importance of Good Random Number Generators
+
+## 2. ZKP Protocol in Rust
+### 1. Install Rust
+Installation 
+* follow this guide for installation on your system: https://www.rust-lang.org/tools/install
+* do these steps to test a successful installation: https://doc.rust-lang.org/book/ch01-01-installation.html
+
+Create a Rust Project
+* Rust comes with its own build- and package-manager called `cargo`
+* create a new project with the command
+    ```
+    cargo init zkp-chaum-pedersen
+    ``` 
+
+### 2. Design Schema
+Overview
+* before we start coding, let's think about the necessary features for our project
+* roles
+    * prover (client)
+    * verifier (server)
+* functions
+    * exponentiate with modulo (used several times by prover)
+    * solve challenge
+    * verify challenge
+    * generate random number
+* data type
+    * big integer
+
+### 3. Coding Exponentiate, Solve & Verify
+* to handle big integers beyond the standard library support, we can use `num-bigint`
+    ```toml
+    num-bigint = { version = "0.4", features = ["rand"]}
+    ```
+    * this also comes with a RNG feature, which is useful for us
+* now, we can implement:
+    * `exponentiate`
+    * `solve`
+    * `verify`
+* these functions (particularly, `solve`) can run into the integer over- or under-flow problem
+    * this means the integer is too high or too low to be captured in memory for this given data type
+
+### 4. Unit Test: Toy Example
+### 5. Random Number Generator (RNG)
+### 6. Refactoring: Add a ZKP struct
+### 8. 1024-bit Unit Test
