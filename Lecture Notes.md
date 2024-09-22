@@ -372,4 +372,53 @@ Refactoring
     * move the function into methods of the `ZKP` struct 
 * remember that refactoring the code also requires refactoring the tests 
 
-### 8. 1024-bit Unit Test
+### 7. 1024-bit Unit Test
+Cryptographic Standards
+* we already learned that the application is not secure with small integers
+* for cryptographic security, we want groups that have certain attributes beyond large-ness
+    * the order is a prime number
+    * every element is a generator
+    * etc.
+* **Diffie-Hellman groups** have such attributes and used in cryptographic standards
+    * link to [info on Diffue-Hellman Groups](https://www.rfc-editor.org/rfc/rfc5114)
+    > This document describes eight Diffie-Hellman groups that can be used in conjunction with IETF protocols to provide security for Internet communications.
+    > The groups allow implementers to use the same groups with a variety of security protocols, e.g., SMIME, Secure SHell (SSH), Transport Layer Security (TLS), and Internet Key Exchange (IKE).
+    >
+    > All of these groups comply in form and structure with relevant standards from ISO, ANSI, NIST, and the IEEE.
+    > These groups are compatible with all IETF standards that make use of Diffie-Hellman or Elliptic Curve Diffie-Hellman cryptography.
+* from this standard document, we can take the constants that define the public parameters for our ZKP-protocol
+    * all values are given in hexa-decimal
+
+1024-bit Group Constants
+* value of the prime $p$ is:
+    ```
+    p = B10B8F96 A080E01D DE92DE5E AE5D54EC 52C99FBC FB06A3C6
+        9A6A9DCA 52D23B61 6073E286 75A23D18 9838EF1E 2EE652C0
+        13ECB4AE A9061123 24975C3C D49B83BF ACCBDD7D 90C4BD70
+        98488E9C 219A7372 4EFFD6FA E5644738 FAA31A4F F55BCCC0
+        A151AF5F 0DC8B4BD 45BF37DF 365C1A65 E68CFDA7 6D4DA708
+        DF1FB2BC 2E4A4371
+    ```
+* value of the generator $g$ is:
+    ```
+    g = A4D1CBD5 C3FD3412 6765A442 EFB99905 F8104DD2 58AC507F
+        D6406CFF 14266D31 266FEA1E 5C41564B 777E690F 5504F213
+        160217B4 B01B886A 5E91547F 9E2749F4 D7FBD7D3 B9A92EE1
+        909D0D22 63F80A76 A6A24C08 7A091F53 1DBF0A01 69B6A28A
+        D662A4D1 8E73AFA3 2D779D59 18D08BC8 858F4DCE F97C2A24
+        855E6EEB 22B3B2E5
+    ```
+* generator generates a prime-order subgroup of size $q$:
+    ```
+    q = F518AA87 81A8DF27 8ABA4E7D 64B7CB9D 49462353
+    ```
+* [source](https://www.rfc-editor.org/rfc/rfc5114#section-2.1)
+
+Implementation
+* to read these hexa-decimal values, we need a dedicated create
+    ```toml
+    [dependencies]
+    hex = { version = "0.4.3", features = ["alloc", "std"]}
+    ```
+* we can use the `hex::decode(data)` to read a hexa-decimal string into bytes
+* then we need to convert it to a big integer using ` BigUint::from_bytes_be(bytes)`
