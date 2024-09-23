@@ -301,6 +301,48 @@ Alice
 * Bob can be verified
 
 ### 11. Assignment: Importance of Good Random Number Generators
+**Tasks**
+* We have seen that the protocol requires to use random number from both sides: prover (client) and verifier (server).
+* Prove that the verifier can obtain the secret $x$ if the prover reuses the same random number k twice when the prover sends him two different challenges $c_1$ and $c_2$
+
+Questions for this assignment
+* Q1 Suppose the following:
+    * 1. A prover selects "x" and "k" and the verifier generates a challenge "c1". The prover solves the challenge and sends "s_1" to the verifier.
+    * 2. After one day the prover still has "x" as secrets and decides to reuse "k". After that, the verifier sends a new challenge "c2" to the prover nd this last returns the new solution "s_2".
+    * What is bad with this?
+* Q2: Now imagine if the prover uses a very bad random number generator for obtaining "k" and the "k" lies every time in a small group of 1000 elements.
+    * What can an attacker easily do?
+
+**Solutions**
+
+T1
+* when the prover reuses the same random number $k$ for two different challenges, $c_1$​ and $c_2$​, the verifier can obtain the prover's secret $x$
+* prover sends the solution to the challenge as:
+    * $ s_1=k−c_1⋅x \text{ mod } q $ for the first challenge and
+    * $ s_2​=k−c_2​⋅x \text{ mod } q $ for the second challenge
+* subtracting these two equations, the verifier can eliminate $k$ and isolate $x$:
+    * $s_1−s_2=(k−c_1⋅x)−(k−c_2⋅x) \text{ mod } q $
+* simplifying this expression
+    * $s_1−s_2=−c_1⋅x+c_2⋅x \text{ mod } q$
+    * $s_1-s_2=(c_2-c_1)⋅x \text{ mod } q$
+* verifier now knows both $s_1−s_2$​ and $c_2−c_1$, and since $q$ is prime, $c_2−c_1$​ is invertible modulo $q$
+* the verifier can compute:
+    * $x=\frac{s_1−s_2}{c_2−c_1} \text{ mod } q $
+* by reusing the same $k$, the prover compromises the secrecy of $x$, allowing the verifier to deduce the secret key
+
+T2
+* if the random number generator (RNG) produces $k$ from small set of 1000 elements, it significantly weakens the security of the protocol 
+* 1: brute force attacks:
+    * with only 1000 possible elements for $k$, an attacker can simply try all possible $k$ to break the protocol
+    * the attacker intercepts $r_1 = \alpha^k$ (or $r_2 = \beta^k$) sent by the prover
+    * since the set of $k$ is small, the attacker can compute $\alpha^k \text{ mod } p'$ (or $\beta^k \text{ mod } p'$) for all 1000 values of $k$ and compare these with $r_1$ (or $r_2$)
+    * then the attacker can find the correct $k$
+* 2: once $k$ is known:
+    * if the attacker has deduced $k$, they can easily solve for $x$ using the challenge-solution pair ($c, s$)
+    * from the solution $s$, the secret $x$ can be computed as $x = \frac{k-s}{c}$
+    * since $k$ is known and ($c, s$) are provided during the protocol, the attacer can compute $x$, breaking the security
+* thus, a small set for $k$ makes the protocol vulnerable as it can be found through brute-force, leading to the compromise of the secret $x$
+
 
 ## 2. ZKP Protocol in Rust
 ### 1. Install Rust
