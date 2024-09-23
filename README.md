@@ -14,7 +14,7 @@ This course has the following chapters and su-sections
     * Generators
     * Discrete Logarithm Problem
     * Chaum-Pedersen ZKP Protocol
-    * Quiz: Chaum-Pedersen ZKP Protocol
+    * Quiz 2: Chaum-Pedersen ZKP Protocol
     * Toy Example
     * Assignment: Importance of Good Random Number Generators
 2. ZKP Protocol in Rust
@@ -27,8 +27,8 @@ This course has the following chapters and su-sections
     * 1024-bit Unit Test
 3. Building a gRPC server
     * gRPC Server Design
-    * Writting and Compiling a Protobuf File with Tonic
-    * Client/Server gRPC Protocol
+    * Writing and Compiling a Protobuf File with Tonic
+    * Quiz 3: Client/Server gRPC Protocol
     * Creating Server & Client Executables
     * Run the Tonic Server
     * Process Register Requests

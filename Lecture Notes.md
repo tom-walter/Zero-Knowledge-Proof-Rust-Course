@@ -33,7 +33,7 @@
     * $ -1 \text{ mod } 2 = 1 $
     * $ -2 \text{ mod } 13 = 11 $
 
-### 3. Quiz Modular Arithmetics
+### 3. Quiz 1: Modular Arithmetics
 * Q1: $34 \text{ mod } 11$
     * $r=1$ because $34=11 * 3 + 1$
 * Q2: $3 \text{ mod } 4$
@@ -251,7 +251,7 @@ Review
 * the user solves the challenge which is easy, if he knows the secret but near-impossible if unknown
 * the server can verify the solution easily
 
-### 9. Quiz: Chaum-Pedersen ZKP Protocol
+### 9. Quiz 2: Chaum-Pedersen ZKP Protocol
 * Q1: What is known to both prover (client) and verifier (server) in the Chaum-Pedersen ZKP protocol?
     * the constants variables $g, h$ (group order)
 * Q2: What is the secret $x$?
@@ -464,3 +464,35 @@ Implementation
     ```
 * we can use the `hex::decode(data)` to read a hexa-decimal string into bytes
 * then we need to convert it to a big integer using ` BigUint::from_bytes_be(bytes)`
+
+## 3. Building a gRPC server
+### 1. gRPC Server Design
+Motivation
+* so far, we built a library for the ZKP based on the Chaum-Pedersen protocol
+    * it can generate proofs and verify them
+    * but this is only part of a fully fledged software
+* ideally, we also want to deploy and utilize the this software
+* imagine you want your users to register with the ZKP-protocol on your service
+* how do we communicate messages between the server and the clients in a standardized way?
+* for this, we can use the `gRPC` framework (=Google's Remote Procedure Call)
+    * this is a well established framework even for non-cryptography jobs
+
+How does it work?
+* we need to define a `protobuf` file that contains the rules for the communication between server and client
+* this communication works across many programming languages, such as Python or JavaScript
+* the `protobuf` file must be compiled with a `gRPC` library to have shared library for the server
+* the [compiler](https://github.com/hyperium/tonic) that will compile our Rust `gRPC` library is called `tonic`
+
+### 2. Writing and Compiling a Protobuf File with Tonic
+Install Protobuf and Tonic
+* follow the installation guidelines on [tonic's github](https://github.com/hyperium/tonic)
+
+### 3. Quiz 3: Client/Server gRPC Protocol
+### 4. Creating Server & Client Executables
+### 5. Run the Tonic Server
+### 6. Process Register Requests
+### 7. Process Challenge Request
+### 8. Process Solution Request
+### 9. Build the Client: Create Register Request
+### 10. Build the Client: Create Authentication Requests
+### 11. Possible Code Improvements as Homework
