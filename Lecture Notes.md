@@ -486,6 +486,88 @@ How does it work?
 ### 2. Writing and Compiling a Protobuf File with Tonic
 Install Protobuf and Tonic
 * follow the installation guidelines on [tonic's github](https://github.com/hyperium/tonic)
+* for ubuntu, run:
+    ```
+    sudo apt update && sudo apt upgrade -y
+    sudo apt install -y protobuf-compiler libprotobuf-dev
+    ```
+Configure the Protobuf File
+* inside the Rust project create a directory called `proto` and file called `zkp_auth.proto`
+* the `.proto` files contains the rules on how server and client communicate
+* this includes what data they can send between each other and what type it is
+* we need to specify a syntax and package name
+    ```proto
+    syntax = "proto3";
+    package zkp_auth;
+    ```
+
+Writing the Protocol's Messages
+* each type of `message` consists of a `Request` and a `Response`
+* for our application, we want to be able
+    * to register a new user
+    * to send a authentication challenge
+    * to send a authentication solution
+* let's start with registering
+    * the prover send a `Request`
+    * we need a user name, which is a string
+    * but protobuf doesn't have `BigUint`
+    * instead we use `bytes` to represent $y_1, y_2$ 
+    ```proto
+    message RegisterRequest {
+        string user = 1;
+        bytes y1 = 2;
+        bytes y2 = 3;
+    }
+    ```
+    * the fields must be numbered
+    * there is no direct `Response` to this but message must be created in pairs
+    ```proto
+    message RegisterResponse {}
+    ```
+Implementation
+* the other request-response message are implemented in the `.proto` file directly
+* note, to introduce anoterh layer of security, we add the field `auth_id`, the server knows its communicating with the same user throughout this authentication session
+
+Defining the Service
+* we created all the necessary request-response pairs
+* now, we need to wrap them into `service`, which defines the context and order in which our messages are executed 
+* the steps are
+    * define the service called `Auth`
+    * create `rpc` functions that handle the messages
+    * the order of functions must follow the ZKP protocol 
+    ```proto
+    service Auth {
+        rpc Register(RegisterRequest) returns (RegisterResponse) {}
+        rpc CreateAuthenticationChallenge(AuthenticationChallengeRequest) returns (AuthenticationChallengeResponse) {}
+        rpc VerifyAuthentication(AuthenticationAnswerRequest) returns (AuthenticationAnswerResponse) {}
+    }
+    ```
+* this is written from the server-side perspective, but `tonic` can compile this also from a client-side perspective 
+
+Building the Protocol with `tonic`
+* add `tonic` as build-dependency inside the `Cargo.toml`
+    ```toml
+    [build-dependencies]
+    tonic-build = "0.9"
+    ```
+* create a file called `build.rs` in the root directory of the Rust project
+* inside write a simple `main` function to compile the protocol with `tonic_build::configure()`
+    ```rust
+    fn main() {
+        tonic_build::configure()
+            .build_server(true)
+            .out_dir("src")
+            .compile(
+                // specify location for proto dependencies
+                &["proto/zkp_auth.proto"],
+                &["proto/"] 
+            )
+            .unwrap();
+    }
+    ```
+* fianlly, run `cargo build` the compile a Rust implementation of this protocol
+    * a new file will be created inside `src` called  `zkp_auth.rs`
+
 
 ### 3. Quiz 3: Client/Server gRPC Protocol
 ### 4. Creating Server & Client Executables
