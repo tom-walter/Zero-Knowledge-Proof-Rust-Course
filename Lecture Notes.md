@@ -17,21 +17,21 @@
 * such that the result of the division may be expressed in two parts: $c, r$ 
 * the dividend can be reconstructed by $c \cdot \text{ divisor } + r$
 * examples:
-    * $ 4 ÷ 2 = 0, r=0$
-    * $ 3 ÷ 2 = 1.5 \text{ or } c=1, r=1$
-    * inversely, $c \cdot 2 + r = 3 $
+    * $4 ÷ 2 = 0, r=0$
+    * $3 ÷ 2 = 1.5$ or $c=1, r=1$
+    * inversely, $c \cdot 2 + r = 3$
 * the remained is equal or greater than zero 
-    * $ 1+0 \text{ mod } 2 = 1 $
-    * $ 1+1 \text{ mod } 2 = 0 $
-    * $ 1+2 \text{ mod } 2 = 1 $
-    * $ 1+3 \text{ mod } 2 = 0 $
-    * $ 1+4 \text{ mod } 2 = 1 $
-    * $ 1+5 \text{ mod } 2 = 0 $
-    * $ 1+(a) \text{ mod } 2 = \{0, 1\}$
+    * $1+0 \text{ mod } 2 = 1$
+    * $1+1 \text{ mod } 2 = 0$
+    * $1+2 \text{ mod } 2 = 1$
+    * $1+3 \text{ mod } 2 = 0$
+    * $1+4 \text{ mod } 2 = 1$
+    * $1+5 \text{ mod } 2 = 0$
+    * $1+(a) \text{ mod } 2 = \{0, 1\}$
     * modulo remained repeats cyclically
 * modulo for negative number
-    * $ -1 \text{ mod } 2 = 1 $
-    * $ -2 \text{ mod } 13 = 11 $
+    * $-1 \text{ mod } 2 = 1$
+    * $-2 \text{ mod } 13 = 11$
 
 ### 3. Quiz 1: Modular Arithmetics
 * Q1: $34 \text{ mod } 11$
@@ -47,7 +47,7 @@
 
 ### 4. Groups
 Introduction
-* in mathematics, groups $G$ are a set of elements plus an operation "$\circ$"
+* in mathematics, groups $G$ are a set of elements plus an operation $\circ$
 * the operation associates an element of the set the other elements in the set
     * e.g. $\set{-1,0,1}$ and operator $+$
 * any group must satisfy 4 properties
@@ -149,7 +149,7 @@ Summary
 * is at the foundation on many crypto-graphic concepts
 * we'll discuss this with an informal approach
 * let define our group
-    * $G$ is a group with operator "$\circ$
+    * $G$ is a group with operator $\circ$
     * $\alpha \in G$ is a generator
     * $d$ is an integer
     * $\beta \in G$ 
@@ -318,10 +318,10 @@ Questions for this assignment
 T1
 * when the prover reuses the same random number $k$ for two different challenges, $c_1$​ and $c_2$​, the verifier can obtain the prover's secret $x$
 * prover sends the solution to the challenge as:
-    * $ s_1=k−c_1⋅x \text{ mod } q $ for the first challenge and
-    * $ s_2​=k−c_2​⋅x \text{ mod } q $ for the second challenge
+    * $s_1=k−c_1⋅x \text{ mod } q$ for the first challenge and
+    * $s_2​=k−c_2​⋅x \text{ mod } q$ for the second challenge
 * subtracting these two equations, the verifier can eliminate $k$ and isolate $x$:
-    * $s_1−s_2=(k−c_1⋅x)−(k−c_2⋅x) \text{ mod } q $
+    * $s_1−s_2=(k−c_1⋅x)−(k−c_2⋅x) \text{ mod } q$
 * simplifying this expression
     * $s_1−s_2=−c_1⋅x+c_2⋅x \text{ mod } q$
     * $s_1-s_2=(c_2-c_1)⋅x \text{ mod } q$
