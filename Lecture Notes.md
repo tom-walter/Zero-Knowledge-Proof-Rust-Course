@@ -625,6 +625,43 @@ Importing Dependencies for the Server
     ```
 
 ### 5. Run the Tonic Server
+Review
+* for our authentication service, we defined three functions in the `zkp_auth.proto` file:
+    * `Register()`
+    * `CreateAuthenticationChallenge()`
+    * `VerifyAuthenticationChallenge()`
+
+Implementing the Server
+* we convert the main function into a asynchronous main function using `#[tokio::main]` and the `async` keyword
+    ```rust
+    #[tokio::main]
+    async fn main() {
+        let addr = "127.0.0.1:50051".to_string();
+        println!("☑ Running the server in {}.", addr);
+
+        let auth_impl = AuthImpl::default();
+
+        Server::builder()
+            .add_service(AuthServer::new(auth_impl))
+            .serve(addr.parse().expect("could not convert address"))
+            .await
+            .unwrap();
+    }
+    ```
+
+Scaffolding for Authentication Service
+* we also need to create some empty struct to bind the authentication logic as methods
+* the methods for this struct are the functions from our service above
+    * _hint:_ the compiler will tell you that you need to implement all three functions
+    * deriving the `Default` trait allows us to instantiate the struct without passing any arguments
+* we can use the types from the auto-generated library `zkp_auth.rs` for this
+    * you can write the function signature and the logic-placeholder can be the `todo!()` macro for now
+* also the `impl` needs the `#[tokio:async_trait]` to asynchronous functions
+* for implementation details, refer to the file `src/server.rs`
+
+Run the server
+* `cargo run --bin server`
+
 ### 6. Process Register Requests
 ### 7. Process Challenge Request
 ### 8. Process Solution Request
