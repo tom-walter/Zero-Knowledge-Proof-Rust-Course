@@ -568,8 +568,14 @@ Building the Protocol with `tonic`
 * fianlly, run `cargo build` the compile a Rust implementation of this protocol
     * a new file will be created inside `src` called  `zkp_auth.rs`
 
-
 ### 3. Quiz 3: Client/Server gRPC Protocol
+* Q1: What is gRPC?
+    * communication protocol "Remote Procedural Calls" upgraded by Google
+* Q2: In which language could gRPC be used?
+    * can be used in almost any programming language
+* Q3: What is a Protobuf file?
+    * a file in its own language for expressing the set of rules that server and client use to communicate using gRPC protocol
+
 ### 4. Creating Server & Client Executables
 ### 5. Run the Tonic Server
 ### 6. Process Register Requests
