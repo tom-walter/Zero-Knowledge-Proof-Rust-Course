@@ -577,6 +577,53 @@ Building the Protocol with `tonic`
     * a file in its own language for expressing the set of rules that server and client use to communicate using gRPC protocol
 
 ### 4. Creating Server & Client Executables
+Scaffolding
+* within the `src` directory, create two files:
+    * `server.rs`
+    * `client.rs`
+* for both files, we need to create `main` functions
+    * use a `println` as placeholder
+* we can configure this inside the `Cargo.toml`
+    ```toml
+    [[bin]]
+    name = "server"
+    path = "./src/server.rs"
+
+    [[bin]]
+    name = "client"
+    path = "./src/client.rs"
+    ```
+* then, we can create exexuctable by running the commands
+    ```
+    cargo run --bin server
+    cargo run --bin client
+    ```
+
+Dependencies
+* building asynchronous server/client logic requires some more dependencies
+* inside the `Cargo.toml`, add
+    ```toml
+    [dependencies]
+    tonic = "0.9"
+    prost = "0.11"
+    tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+    ```
+
+Importing Dependencies for the Server
+* we need to import our auto-generated `zpk_auth` library as a module
+* the trick to importing a Rust file as library is this:
+    ```rust
+    pub mod zkp_auth {
+        include!("./zkp_auth.rs");
+    }
+
+    use zkp_auth::auth_server;
+    ```
+* also import some more structs from `tonic` to run our server
+    ```rust
+    use tonic::{transport::Server, Code, Request, Response, Status};
+    ```
+
 ### 5. Run the Tonic Server
 ### 6. Process Register Requests
 ### 7. Process Challenge Request
