@@ -663,6 +663,38 @@ Run the server
 * `cargo run --bin server`
 
 ### 6. Process Register Requests
+Hanlding User Info
+* the first function from our service is `Register`
+* let's create a `UserInfo` struct that contains _all_ data the user sends/receives during the protocol
+* we need
+    * registration info
+        * user's name
+        * variables $y_1, y_2$
+    * auhtorization info
+        * * variables $r_1, r_2$
+    * verification info
+        * variables $c_1, s_2$
+        * a session id
+* if we instantiate struct of `UserInfo` inside the method of the struct `AuthImpl`, then the user's would be lost inside the scope
+* to share this `UserInfo` across methods, we will store it as attribute of the struct `AuthImpl` 
+* we can do this with a `Mutex<HasMap<String, UserInfo>>`
+* why `Mutex`?
+    * since the methods are asynchronous, writing to the HashMap could be done simultaneously by multiple threads -> this is _unsafe_
+    * the `Mutex` lock allows only one thread to write to the hashmap at a time -> this is _safe_
+* now, we can store the user's data for the protocol
+
+Testing with `gRPC` Clicker
+* install `gRPC` clicker as VSCode extension
+    * alternatively, use Postman or similar tool
+* open a new tab and enter the following infos
+    * name: zkp_auth
+    * adress: 127.0.0.1:50051
+    * plaintext: yes
+    * connection type: proto file
+    * proto path: `proto/zkp_auth.proto`
+* this should create entries for each function that we defined in the proto file
+* inside `Register`, you can fill the variables with valid, dummy values
+
 ### 7. Process Challenge Request
 ### 8. Process Solution Request
 ### 9. Build the Client: Create Register Request
