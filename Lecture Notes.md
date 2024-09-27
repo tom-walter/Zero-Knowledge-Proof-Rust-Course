@@ -722,6 +722,13 @@ Random Number & String Generation
     ```
 
 ### 8. Process Solution Request
+* now, the client sends the solution and the server needs to verify it
+* we need check the request's auth id against the hashmap to get the user or raise an error
+* next, we need to get the user info
+* from the request, we store the solution in the user info
+* we must also initialize a ZKP protocol to verify the solution with public parameters and the data send by the client
+* if the solution can be verified, a session token will be generated and returned to the client, else raise an "Permission Denied" error about a bad solution 
+
 ### 9. Build the Client: Create Register Request
 ### 10. Build the Client: Create Authentication Requests
 ### 11. Possible Code Improvements as Homework
