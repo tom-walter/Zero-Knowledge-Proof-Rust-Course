@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap};
 use std::sync::Mutex;
 
 use num_bigint::BigUint;
@@ -11,6 +11,8 @@ pub mod zkp_auth {
 }
 
 use zkp_auth::{auth_server::{Auth, AuthServer}, AuthenticationAnswerResponse, AuthenticationAnswerRequest, AuthenticationChallengeRequest, AuthenticationChallengeResponse, RegisterRequest, RegisterResponse};
+
+const STRING_SIZE: usize = 12;
 
 #[derive(Debug, Default)]
 pub struct AuthImpl {
@@ -65,7 +67,7 @@ impl Auth for AuthImpl {
         if let Some(user_info) = user_info_hashmap.get_mut(&user_name) {
             let (_, _, _, q) = ZKP::get_constants();
             let c = ZKP::generate_random_number(&q);
-            let auth_id = ZKP::generate_random_string(12);
+            let auth_id = ZKP::generate_random_string(STRING_SIZE);
 
             user_info.r1 = BigUint::from_bytes_be(&request.r1);
             user_info.r2 = BigUint::from_bytes_be(&request.r2);
@@ -83,7 +85,47 @@ impl Auth for AuthImpl {
     }
 
     async fn verify_authentication(&self, request: Request<AuthenticationAnswerRequest>) -> Result<Response<AuthenticationAnswerResponse>, Status> {
-        todo!()
+        println!("Processing Authentication Request {:?}", request);
+
+        let request = request.into_inner();
+        let auth_id = request.auth_id;
+
+        let auth_id_to_user_hashmap = &mut self.auth_id_to_username
+            .lock()
+            .unwrap(); 
+
+        if let Some(user_name) = auth_id_to_user_hashmap.get(&auth_id){
+            let user_info_hashmap = &mut self.user_info
+                .lock()
+                .unwrap();
+            let user_info = user_info_hashmap
+                .get_mut(user_name)
+                .expect("AuthId not found in storage");
+
+            let s = BigUint::from_bytes_be(&request.s);
+            user_info.s = s;
+
+            let (alpha, beta, prime, order) = ZKP::get_constants();
+            let zkp = ZKP { alpha, beta, prime, order };
+
+            let verification = zkp.verify(
+                &user_info.r1,
+                &user_info.r2,
+                &user_info.y1,
+                &user_info.y2,
+                &user_info.c,
+                &user_info.s
+            );
+            
+            if verification {
+                let session_id = ZKP::generate_random_string(STRING_SIZE);
+                Ok(Response::new(AuthenticationAnswerResponse { session_id })) 
+            } else {
+                Err(Status::new(Code::PermissionDenied, format!("AuthId {} send a bad soltion to the challenge", auth_id)))
+            }
+        } else {
+            Err(Status::new(Code::NotFound, format!("AuthId {} not found", auth_id)))
+        }
     }
 }
 

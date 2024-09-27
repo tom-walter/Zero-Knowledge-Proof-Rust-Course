@@ -2,10 +2,10 @@ use num_bigint::{BigUint, RandBigInt};
 use rand::{self, Rng};
 
 pub struct ZKP {
-    prime: BigUint,
-    order: BigUint,
-    alpha: BigUint,
-    beta: BigUint,
+    pub prime: BigUint,
+    pub order: BigUint,
+    pub alpha: BigUint,
+    pub beta: BigUint,
 }
 
 impl ZKP {
