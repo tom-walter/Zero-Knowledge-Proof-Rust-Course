@@ -36,7 +36,7 @@ struct UserInfo {
 #[tonic::async_trait]
 impl Auth for AuthImpl {
     async fn register(&self, request: Request<RegisterRequest>) -> Result<Response<RegisterResponse>, Status> {
-        println!("Processing Request {:?}", request);
+        println!("Processing Register Request {:?}", request);
 
         let request = request.into_inner();
 
@@ -53,7 +53,7 @@ impl Auth for AuthImpl {
     }
 
     async fn create_authentication_challenge(&self, request: Request<AuthenticationChallengeRequest>) -> Result<Response<AuthenticationChallengeResponse>, Status> {
-        println!("Processing Request {:?}", request);
+        println!("Processing Challenge Request {:?}", request);
 
         let request = request.into_inner();
 
@@ -63,12 +63,13 @@ impl Auth for AuthImpl {
             .unwrap(); 
 
         if let Some(user_info) = user_info_hashmap.get_mut(&user_name) {
+            let (_, _, _, q) = ZKP::get_constants();
+            let c = ZKP::generate_random_number(&q);
+            let auth_id = ZKP::generate_random_string(12);
+
             user_info.r1 = BigUint::from_bytes_be(&request.r1);
             user_info.r2 = BigUint::from_bytes_be(&request.r2);
-
-            let (_, _, _, q) = ZKP::get_constants();
-            let c = ZKP::generate_random_below(&q);
-            let auth_id = "skdjfsk".to_string();
+            user_info.c = c.clone();
 
             let auth_id_to_user = &mut self.auth_id_to_username
                 .lock()

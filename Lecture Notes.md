@@ -706,10 +706,20 @@ Logic of Challenge Request
 * we also need to keep track of the user and his/her related auth id
     * let's add another mutex-locked hashmap
 
-Random Number Generation
+Random Number & String Generation
 * we can use the function from our `lib.rs` to generate random numbers
 * since this function requires an upper bound, we will make a function that returns the constant of the 1024-bit Diffie-Hellman group
 * this function shall return the constants $(\alpha, \beta, p, q)$ making it easier to share the parameters of the ZKP protocol
+* we can also use the `rand` crate to generate a strings
+    ```rust
+    pub fn generate_random_string(size: usize) -> String {
+        rand::thread_rng()
+            .sample_iter(rand::distributions::Alphanumeric)
+            .take(size)
+            .map(char::from)
+            .collect()
+    }
+    ```
 
 ### 8. Process Solution Request
 ### 9. Build the Client: Create Register Request
