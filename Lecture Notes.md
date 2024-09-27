@@ -746,4 +746,19 @@ Implementation
 * collect the data into a `RegisterRequest` and send it to the server
 
 ### 10. Build the Client: Create Authentication Requests
+Implementation
+* this consists of two parts
+    * the authentication challenge & solution
+    * the authentication verification
+* for the challenge, the client generates a random number $k$ to compute $r_1, r_2$ with the ZKP protocol parameters
+* this data is send to the server and the server responds with a challenge $c$
+* to solve this challenge, the user must enter the password $x$ again and compute the solution $s$
+* the client gets send this to the server and 
+    * if the solution is verified, the user receives a session id 
+    * if the solution is bad, the access gets denied
+
+Success
+* we build a ZKP authentication system between a server and client
+* you learned not only the theory of ZKP but also how build a secure service with it
+
 ### 11. Possible Code Improvements as Homework
