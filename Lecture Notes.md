@@ -696,6 +696,21 @@ Testing with `gRPC` Clicker
 * inside `Register`, you can fill the variables with valid, dummy values
 
 ### 7. Process Challenge Request
+Logic of Challenge Request 
+* for the authentication challenge, the user sends two more variables $r_1, r_2$
+* the server will respond with the random number $c$ and an authentication id
+* if the user name exists in our storage, i.e. the user info hashmap
+    * then we can read the new variables
+    * and send a challenge and an auth id
+* if not, we raise an error that the user was not found
+* we also need to keep track of the user and his/her related auth id
+    * let's add another mutex-locked hashmap
+
+Random Number Generation
+* we can use the function from our `lib.rs` to generate random numbers
+* since this function requires an upper bound, we will make a function that returns the constant of the 1024-bit Diffie-Hellman group
+* this function shall return the constants $(\alpha, \beta, p, q)$ making it easier to share the parameters of the ZKP protocol
+
 ### 8. Process Solution Request
 ### 9. Build the Client: Create Register Request
 ### 10. Build the Client: Create Authentication Requests
