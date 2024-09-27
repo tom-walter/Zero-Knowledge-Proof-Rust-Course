@@ -730,5 +730,20 @@ Random Number & String Generation
 * if the solution can be verified, a session token will be generated and returned to the client, else raise an "Permission Denied" error about a bad solution 
 
 ### 9. Build the Client: Create Register Request
+Recap 
+* we have set up all the server-side functions for the ZKP-based authentication service
+* this must be complemented by the client-side, i.e. prover's computation of the necessary data
+
+Preparation
+* we can re-use many of the same imports that we used for the `server.rs`
+* this, we import the `AuthClient` from the auto-generated library
+* this client must be connected to the server's address
+
+Implementation
+* after connecting, we must ask the user for their _username_ and _password_
+* convert the password to bytes and the bytes to a `BigUint`
+* _hint:_ this is the secret for the computation of $y_1, y_2$`
+* collect the data into a `RegisterRequest` and send it to the server
+
 ### 10. Build the Client: Create Authentication Requests
 ### 11. Possible Code Improvements as Homework
