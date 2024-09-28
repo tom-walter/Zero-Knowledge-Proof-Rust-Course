@@ -8,7 +8,7 @@ pub mod zkp_auth {
     include!("./zkp_auth.rs");
 }
 
-use zkp_auth::{auth_client::AuthClient, RegisterRequest};
+use zkp_auth::{auth_client::AuthClient, AuthenticationAnswerRequest, AuthenticationChallengeRequest, RegisterRequest};
 
 #[tokio::main]
 async fn main() {
@@ -26,6 +26,7 @@ async fn main() {
         .expect("could not parse user input from stdin");
     let user_name = buf.trim().to_string();
 
+    buf.clear();
     println!("Please provide your password:");
     stdin()
         .read_line(&mut buf)
@@ -35,6 +36,12 @@ async fn main() {
 
     // create ZKP protocol
     let (alpha, beta, prime, order) = ZKP::get_constants();
+    let zkp = ZKP {
+        prime: prime.clone(),
+        order: order.clone(),
+        alpha: alpha.clone(),
+        beta: beta.clone(),
+    };
 
     // register request
     let y1 = ZKP::exponentiate(
@@ -48,11 +55,59 @@ async fn main() {
         &prime,
     );
     let request= RegisterRequest {
-        user: user_name,
+        user: user_name.clone(),
         y1: y1.to_bytes_be(),
         y2: y2.to_bytes_be(),
     };
     let _response = client.register(request)
         .await
         .expect("could not register in server");
+
+    // authentication challenge request
+    let k = ZKP::generate_random_number(&order);
+    let r1 = ZKP::exponentiate(
+        &alpha,
+        &k,
+        &prime,
+    );
+    let r2 = ZKP::exponentiate(
+        &beta,
+        &k,
+        &prime,
+    );
+    let request= AuthenticationChallengeRequest {
+        user: user_name,
+        r1: r1.to_bytes_be(),
+        r2: r2.to_bytes_be(),
+    };
+
+    let _response = client.create_authentication_challenge(request)
+        .await
+        .expect("could not create challenge")
+        .into_inner();
+
+    let auth_id = _response.auth_id;
+    let c = BigUint::from_bytes_be(&_response.c);
+
+    // authentication answer request
+    buf.clear();
+    println!("Please provide your password:");
+    stdin()
+        .read_line(&mut buf)
+        .expect("could not parse user input from stdin");
+    let password = BigUint::from_bytes_be(buf.trim().as_bytes());
+    
+    let s = zkp.solve(&k, &c, &password);
+
+    let request = AuthenticationAnswerRequest {
+        auth_id: auth_id,
+        s: s.to_bytes_be(),
+    };
+
+    let _response = client.verify_authentication(request)
+        .await
+        .expect("server could not verify authentication of user")
+        .into_inner();
+
+    println!("You logged in. SessionId is {}", _response.session_id);
 }
