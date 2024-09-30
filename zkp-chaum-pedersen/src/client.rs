@@ -1,7 +1,6 @@
 use std::io::stdin;
 
 use num_bigint::BigUint;
-use tonic::Request;
 use zkp_chaum_pedersen::ZKP;
 
 pub mod zkp_auth {
@@ -27,7 +26,7 @@ async fn main() {
     let user_name = buf.trim().to_string();
 
     buf.clear();
-    println!("Please provide your password:");
+    println!("Please provide your password (to register):");
     stdin()
         .read_line(&mut buf)
         .expect("could not parse user input from stdin");
@@ -91,7 +90,7 @@ async fn main() {
 
     // authentication answer request
     buf.clear();
-    println!("Please provide your password:");
+    println!("Please provide your password (to log in):");
     stdin()
         .read_line(&mut buf)
         .expect("could not parse user input from stdin");
