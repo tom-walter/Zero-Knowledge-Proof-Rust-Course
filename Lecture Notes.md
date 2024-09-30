@@ -762,3 +762,15 @@ Success
 * you learned not only the theory of ZKP but also how build a secure service with it
 
 ### 11. Possible Code Improvements as Homework
+* so far, we have just implemented one feature at a time without considering the overall structure of the code
+* for formatting and code style, you can use `clippy` (Rust's linter)
+    * run `cargo clippy` to get suggestions on improvements
+    * run `cargo clippy fix` to let it make un-complicated improvements directly
+* serializer: conversion between types
+    * we continuously convert back and forth between `bytes` and ``BigUint`
+    * we could create a struct that (automatically) serializes and deserializes numbers for us
+
+## 4. Dockerizing the Application
+### 1. Introduction to Docker
+### 2. Writting a Dockerfile and `docker-compose.yaml`
+### 3. Running the server and client in the Docker container
