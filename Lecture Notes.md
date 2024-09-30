@@ -772,5 +772,17 @@ Success
 
 ## 4. Dockerizing the Application
 ### 1. Introduction to Docker
+What is [Docker](https://docs.docker.com/get-started/docker-overview/)?
+* what does it mean to _"dockerize"_ an application?
+* docker is a program that allows us to abstract the environment where the application runs
+* it creates a virtual environment with the specific requirements for your app
+* this includes operating system, frameworks, compilers, and many more things with needing to set up a dedicated physical machine
+    * virtual environment is independent of and isolated from the host machine 
+* these environments are called a `containers`, which make deployment or delivery fast and consistent
+* we are interest into deploying our ZKP-app inside a docker container
+* the docker compose file helps us configure the container itself, port connections, etc.
+* we can use the docker images directly from [docker's website](https://hub.docker.com/_/rust)
+    * this helps us set foundation for our container
+
 ### 2. Writting a Dockerfile and `docker-compose.yaml`
 ### 3. Running the server and client in the Docker container
