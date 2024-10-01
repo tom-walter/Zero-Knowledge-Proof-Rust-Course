@@ -821,7 +821,7 @@ Docker Compose Yaml
             volumes: 
                 - ./:/zkp-server # map the current dir to the container's dir
             environment:
-                - USER=guido    # specify the user as env variable
+                - USER=tom    # specify the user as env variable
             container_name: zkpserver # give name to this container
     ```
     * `volumes` maps directories from A to B by this syntax `A/:/B` 
@@ -838,3 +838,44 @@ Build the Image
 * building will take some time
 
 ### 3. Running the server and client in the Docker container
+Additional Dependencies 
+* since the container are very light-weight, they will not have all your required dependencies installed
+* you can add the installation of dependencies inside the `Dockerfile`
+    ```Dockerfile
+    RUN apt update # update linux package list
+    RUN apt install -y protobuf-compiler # install protobuf (like before)
+    ```
+    * remember that we need the protobuf compiler to integrate the protocol rules with tonic
+* next, re-build the image 
+* verify by looking at all available images with the command
+    ```
+    $ docker images
+    > REPOSITORY    TAG     IMAGE_ID        CREATED         SIZE
+    > zkpserver     latest  b79d56B6149c    30 seconds ago  3.65GB
+    ```
+
+Running the Docker Image
+* we can run the image with
+    ```
+    docker-compose run -rm zkpserver
+    ```
+* using the `-rm` flag opens remote terminal session to the container
+* inside one remote terminal, we can run the compiled ZKP server
+    ```
+    cargo run --release --bin server
+    ```
+* _hint:_ don't run two container instances
+* connect to the same instance again with another remote terminal
+    ```
+    docker exec -it zkpserver /bin/bash
+    ```
+* then, we can run the compiled ZKP server
+    ```
+    cargo run --release --bin client
+    ```
+
+Testing the Application
+* inside the client enter a user and password to register
+* confirm the password for the log-in
+* receive the session id
+* **QED: with ZKP: you can login without the server knowing your password!**
