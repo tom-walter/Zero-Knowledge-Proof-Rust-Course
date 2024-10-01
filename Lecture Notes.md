@@ -784,5 +784,57 @@ What is [Docker](https://docs.docker.com/get-started/docker-overview/)?
 * we can use the docker images directly from [docker's website](https://hub.docker.com/_/rust)
     * this helps us set foundation for our container
 
+Install Docker
+* docker installation varies strongly dependent on the host system
+* find your host-system and architecture in the list of [supported platforms](https://docs.docker.com/engine/install/#supported-platforms)
+* then follow the installtion instructions 
+
 ### 2. Writting a Dockerfile and `docker-compose.yaml`
+Required Config Files 
+* to get docker running, we need 2 configuration files
+    * `dockerfile`
+    * `docker-compose.yaml`
+
+Dockerfile
+* it contains commands for building the docker image
+    * per convention, commands are capitalized 
+* it maps filesystems between host and target machine
+    ```Dockerfile
+    FROM rust:1.77 # load base Rust image version
+
+    WORKDIR /zkp-server # target directory
+
+    COPY . . # copy everything from local directory recursively
+
+    RUN cargo build --release --bin server --bin client # compile and run our ZKP application
+    ```
+
+Docker Compose Yaml
+* this file configures specifies how the containers are going to work
+* different services that interact together or with the network
+    ```yaml
+    version: '3.8' # add docker version
+
+    services:           # what services will run
+        zkpserver:
+            build: .    # use the local dockerfile to build service
+            volumes: 
+                - ./:/zkp-server # map the current dir to the container's dir
+            environment:
+                - USER=guido    # specify the user as env variable
+            container_name: zkpserver # give name to this container
+    ```
+    * `volumes` maps directories from A to B by this syntax `A/:/B` 
+
+Build the Image
+* to build an image, run the following command
+    ```
+    docker-compose build <service-name> 
+    ```
+* this should match the name from the `yaml` file
+    ```
+    docker-compose build zkpserver 
+    ```
+* building will take some time
+
 ### 3. Running the server and client in the Docker container
