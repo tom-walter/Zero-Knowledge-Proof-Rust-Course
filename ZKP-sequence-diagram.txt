@@ -1,0 +1,8 @@
+sequenceDiagram
+    Bob->Alice:  $$G(\mathbb{Z}_p,*), q$$: prime group & order
+    Bob->Alice:  $$\alpha, \beta$$: generators
+    Bob->>Alice: $$(y_1, y_2) = (\alpha^x, \beta^x)$$
+    Bob->>Alice: $$(r_1, r_2) = (\alpha^k, \beta^k)$$
+    Alice->>Bob: $$c$$: challenge
+    Bob->>Alice: $$s=k-c\cdot x$$
+    Alice->>Bob: verify: $$(r_1, r_2) = (\alpha^s \cdot y^c_1, \beta^s \cdot y^c_2)$$

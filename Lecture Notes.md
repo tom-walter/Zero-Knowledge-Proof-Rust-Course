@@ -269,6 +269,12 @@ Setup
     * there are theorems to determine sets with all elements as generator (not covered here)
 * our generators are $\alpha=4$ and $\beta=9$
 
+Sequence Diagram (Mathematical Step)
+<p align="left">
+<img src="ZKP-sequence-diagram.png"  width=400/>
+</p>     
+
+
 Bob
 * secret is $x=6$
 * computes $y_1, y_2$
